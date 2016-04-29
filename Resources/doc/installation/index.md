@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-This version of the bundle requires Symfony 2.3.
+This version of the bundle requires Symfony 2.8.
 
 // PUT HERE RESUME LIST
 
@@ -21,7 +21,12 @@ Add to your `/composer.json` file :
 ``` json
     "require": {
         ...
-        "desarrolla2/blog-bundle": "dev-master"
+        "twig/extensions": "^1.3",
+        "symfony/assetic-bundle": "^2.8",
+        "liip/imagine-bundle": "^1.5",
+        "gedmo/doctrine-extensions": "^2.4",
+        "desarrolla2/blog-bundle": "dev-master",
+        
     },
 ````
 
@@ -45,8 +50,8 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
+        new Symfony\Bundle\AsseticBundle\AsseticBundle(),
         new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-        new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
         new Desarrolla2\Bundle\BlogBundle\BlogBundle(),
     );
 }
@@ -175,6 +180,21 @@ You need to create your templates as following
 
 You can to override templates or blocks of blog bundle here.
 
+### Create Twig services
+
+``` yml
+services:
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.text:
+            class: Twig_Extensions_Extension_Text
+            tags:
+                - { name: twig.extension }
+```
+
 #Configure locale
 
 ``` yml
@@ -186,12 +206,15 @@ twig:
 
 #Last step Assetic Configuration
 
-One last thing, you must add blog bundle to the assetic bundle configuration
+One last thing, you must add assetic bundle configuration to config.yml
 
 ``` yml
 assetic:
-    # [...]
+    debug:          "%kernel.debug%"
+    use_controller: false
     bundles:        [ BlogBundle ]
+    filters:
+        cssrewrite: ~
 ```
 
 *Good Look with your blog*
